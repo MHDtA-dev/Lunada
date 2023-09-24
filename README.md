@@ -49,7 +49,7 @@ Lunada::DeserializeStruct<MyData>(dataFromFile, "data_serialized.lunada");
 
 **Note:** Do not use data types with dynamic size in your struct, such as std::vector, std::unordered_map etc. since Lunada will not save them, and the rest of the data will be saved with errors. To save such types of data, refer to the methods below:
 
-You can serialize std::vector<T> in the file. T - can be any fixed size data type or a structure that meets the requirements written earlier:
+You can serialize std::vector< T > in the file. T - can be any fixed size data type or a structure that meets the requirements written earlier:
 
 ```cpp
 std::vector<MyData> myVector = {...};
