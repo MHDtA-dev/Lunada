@@ -130,6 +130,109 @@ namespace Lunada {
     }
 
 
+    template <typename T>
+    void SerializeVector(const std::vector<T>& data, const std::string& filename) {
+        std::ofstream file(filename, std::ios::binary);
+
+        if (!file.is_open()) {
+            std::cerr << "[Lunada] File write error (" << filename << ")" << std::endl;
+            return;
+        }
+
+        size_t vectorSize = data.size();
+        file.write(reinterpret_cast<const char*>(&vectorSize), sizeof(size_t));
+
+        for (const T& item : data) {
+            file.write(reinterpret_cast<const char*>(&item), sizeof(T));
+        }
+
+        file.close();
+    }
+
+    template <typename T>
+    void DeserializeVector(std::vector<T>& data, const std::string& filename) {
+        std::ifstream file(filename, std::ios::binary);
+
+        if (!file.is_open()) {
+            std::cerr << "[Lunada] File read error (" << filename << ")" << std::endl;
+            return;
+        }
+
+        size_t vectorSize;
+        file.read(reinterpret_cast<char*>(&vectorSize), sizeof(size_t));
+
+        data.clear();
+        data.reserve(vectorSize);
+
+        for (size_t i = 0; i < vectorSize; ++i) {
+            T item;
+            file.read(reinterpret_cast<char*>(&item), sizeof(T));
+            data.push_back(item);
+        }
+
+        file.close();
+    }
+
+
+    template <typename KeyType, typename ValueType>
+    void SerializeUnorderedMap(const std::unordered_map<KeyType, ValueType>& data, const std::string& filename) {
+        std::ofstream file(filename, std::ios::binary);
+
+        if (!file.is_open()) {
+            std::cerr << "[Lunada] File write error (" << filename << ")" << std::endl;
+            return;
+        }
+
+
+        size_t mapSize = data.size();
+        file.write(reinterpret_cast<const char*>(&mapSize), sizeof(size_t));
+
+
+        for (const auto& pair : data) {
+            size_t keyLength = pair.first.size();
+            size_t valueLength = sizeof(ValueType);
+
+            file.write(reinterpret_cast<const char*>(&keyLength), sizeof(size_t));
+            file.write(pair.first.c_str(), keyLength);
+
+            file.write(reinterpret_cast<const char*>(&valueLength), sizeof(size_t));
+            file.write(reinterpret_cast<const char*>(&pair.second), sizeof(pair.second));
+        }
+
+        file.close();
+    }
+
+    template <typename KeyType, typename ValueType>
+    void DeserializeUnorderedMap(std::unordered_map<KeyType, ValueType>& data, const std::string& filename) {
+        std::ifstream file(filename, std::ios::binary);
+
+        if (!file.is_open()) {
+            std::cerr << "[Lunada] File read error (" << filename << ")" << std::endl;
+            return;
+        }
+
+
+        size_t mapSize;
+        file.read(reinterpret_cast<char*>(&mapSize), sizeof(size_t));
+
+
+        for (size_t i = 0; i < mapSize; ++i) {
+            size_t keyLength, valueLength;
+            file.read(reinterpret_cast<char*>(&keyLength), sizeof(size_t));
+            std::string key(keyLength, '\0');
+            file.read(&key[0], keyLength);
+
+            file.read(reinterpret_cast<char*>(&valueLength), sizeof(size_t));
+            ValueType value;
+            file.read(reinterpret_cast<char*>(&value), valueLength);
+
+            data[key] = value;
+        }
+
+        file.close();
+    }
+
+
 }
 
 #endif //LUNADA_LUNADA_H
