@@ -1,6 +1,6 @@
 # Lunada
 
-![Logo](logo.PNG)
+![Logo](logo.JPG)
 
 ## Lunada - Simple cross-platform one header C++ library for serializing and saving data
 
