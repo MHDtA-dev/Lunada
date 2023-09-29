@@ -58,7 +58,7 @@ namespace Lunada {
         file.close();
     }
 
-    void* ReadRawDataFromFile(const std::string& filePath) {
+    inline void* ReadRawDataFromFile(const std::string& filePath) {
         std::ifstream fileStream(filePath, std::ios::binary);
         if (!fileStream) {
             std::cerr << "[Lunada] File read error (" << filePath << ")" << std::endl;
@@ -77,7 +77,7 @@ namespace Lunada {
     }
 
 
-    void SerializeStringMap(const std::unordered_map<std::string, std::string>& data, const std::string& filename) {
+    inline void SerializeStringMap(const std::unordered_map<std::string, std::string>& data, const std::string& filename) {
         std::ofstream file(filename, std::ios::binary);
 
         if (!file.is_open()) {
@@ -102,7 +102,7 @@ namespace Lunada {
         file.close();
     }
 
-    void DeserializeStringMap(std::unordered_map<std::string, std::string>& data, const std::string& filename) {
+    inline void DeserializeStringMap(std::unordered_map<std::string, std::string>& data, const std::string& filename) {
         std::ifstream file(filename, std::ios::binary);
 
         if (!file.is_open()) {
